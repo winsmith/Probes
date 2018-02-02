@@ -2,6 +2,7 @@ from math import sqrt
 import logging
 
 logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', level=logging.INFO)
+G = 6.673e-11  # gravitational constant
 
 
 class GameObject:
@@ -24,6 +25,15 @@ class Position:
         self.y = y
         self.z = z
 
+    def distance_to(self, other_position: 'Position') -> float:
+        """'
+        Return the distance between two positions
+        """
+        dx = self.x - other_position.x
+        dy = self.y - other_position.y
+        dz = self.z - other_position.z
+        return sqrt(dx * dx + dy * dy + dz * dz)
+
 
 class Vector(Position):
     pass
@@ -37,10 +47,6 @@ class Body(GameObject):
         super().__init__(name, tick_number)
         self.position = position
         self.vector = vector
-
-    def update_vector(self):
-        # TODO
-        pass
 
     def move(self, elapsed_ticks):
         self.position.x += elapsed_ticks * self.vector.x
@@ -57,6 +63,39 @@ class Body(GameObject):
         # TODO: Make three-dimensional
         numerator = 6.67e-11 * 1e6 * self.get_mass()
         return sqrt(numerator / r2)
+
+    def distance_to(self, other_body: 'Body') -> float:
+        """'
+        Return the distance between two bodies
+        """
+        return self.position.distance_to(other_body.position)
+
+    def accelerate(self, other_body: 'Body'):
+        """
+        Compute the net force acting between this body and
+        other_body and add to the net force acting on this
+        body
+        """
+
+        # These two checks are not in the original source
+        if self == other_body:
+            return
+
+        if other_body is None:
+            return
+
+        # softening parameter (just to avoid infinities)
+        eps = 3E4
+
+        dx = self.position.x - other_body.position.x
+        dy = self.position.y - other_body.position.y
+        dz = self.position.z - other_body.position.z
+        dist = self.distance_to(other_body)
+
+        F = (G * self.get_mass() * other_body.get_mass()) / (dist*dist + eps*eps)
+        self.vector.x += F * dx / dist
+        self.vector.y += F * dy / dist
+        self.vector.z += F * dz / dist
 
 
 class Planetoid(Body):
@@ -99,5 +138,10 @@ class SpaceCraft(Body):
 
     def tick(self):
         self.logger.info("Spacecraft Tick!")
+
+    def get_mass(self):
+        base_mass = 100
+        component_mass = 20
+        return base_mass + component_mass * len(self.parts)
 
 

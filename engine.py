@@ -16,10 +16,20 @@ class ProbesEngine:
         self.logger.info(f"================== Tick {self.current_tick_number} ==================")
 
         for game_object in self.game_objects:
-            if isinstance(game_object, Body):
-                game_object.update_vector()
-                game_object.move(1)
+            self.accelerate(game_object)
             game_object.tick()
+
+    def accelerate(self, body):
+        if not isinstance(body, Body):
+            return
+
+        other_bodies = [game_object for game_object in self.game_objects if isinstance(game_object, Body)]
+
+        # TODO: Barnes-Huttify this
+        for other_body in other_bodies:
+            body.accelerate(other_body)
+
+        body.move(1)
 
     def run(self):
         while True:
