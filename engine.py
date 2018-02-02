@@ -1,5 +1,7 @@
 import logging
 
+from game_object import Body
+
 logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', level=logging.INFO)
 
 
@@ -11,9 +13,12 @@ class ProbesEngine:
 
     def tick(self):
         self.current_tick_number = self.current_tick_number + 1
-        self.logger.info(f"Tick {self.current_tick_number}")
+        self.logger.info(f"================== Tick {self.current_tick_number} ==================")
 
         for game_object in self.game_objects:
+            if isinstance(game_object, Body):
+                game_object.update_vector()
+                game_object.move(1)
             game_object.tick()
 
     def run(self):

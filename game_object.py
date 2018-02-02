@@ -4,6 +4,16 @@ import logging
 logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', level=logging.INFO)
 
 
+class GameObject:
+    def __init__(self, name="unnamed GameObject", tick_number: int = 0):
+        self.name = name
+        self.tick_number = tick_number
+        self.logger = logging.getLogger(self.name.ljust(20))
+
+    def tick(self):
+        pass
+
+
 class Position:
     x: float
     y: float
@@ -19,21 +29,12 @@ class Vector(Position):
     pass
 
 
-class GameObject:
-    def __init__(self, tick_number: int = 0):
-        self.tick_number = tick_number
-        self.logger = logging.getLogger(self.__class__.__name__.ljust(20))
-
-    def tick(self):
-        pass
-
-
 class Body(GameObject):
     position: Position
     vector: Vector
 
-    def __init__(self, position: Position, vector: Vector, tick_number: int = 0):
-        super().__init__(tick_number)
+    def __init__(self, position: Position, vector: Vector, name="unnamed Body", tick_number: int = 0):
+        super().__init__(name, tick_number)
         self.position = position
         self.vector = vector
 
@@ -42,7 +43,10 @@ class Body(GameObject):
         pass
 
     def move(self, elapsed_ticks):
-        pass
+        self.position.x += elapsed_ticks * self.vector.x
+        self.position.y += elapsed_ticks * self.vector.y
+        self.position.z += elapsed_ticks * self.vector.z
+        self.logger.info(f"Moved to x{self.position.x} y{self.position.y} z{self.position.z}")
 
     def get_mass(self) -> float:
         pass
@@ -58,8 +62,8 @@ class Body(GameObject):
 class Planetoid(Body):
     mass: float = 7.34767309e22
 
-    def __init__(self, position: Position, vector: Vector, mass: float, tick_number: int = 0):
-        super().__init__(position, vector, tick_number)
+    def __init__(self, position: Position, vector: Vector, mass: float, name="unnamed Planetoid", tick_number: int = 0):
+        super().__init__(position, vector, name, tick_number)
         self.mass = mass
 
     def get_mass(self):
@@ -86,8 +90,8 @@ class SpaceCraft(Body):
     crew: [CrewMember]
     resources: [Resource]
 
-    def __init__(self, position: Position, vector: Vector, tick_number: int = 0):
-        super().__init__(position, vector, tick_number)
+    def __init__(self, position: Position, vector: Vector, name="unnamed SpaceCraft", tick_number: int = 0):
+        super().__init__(position, vector, name, tick_number)
 
         self.parts = []
         self.crew = []
