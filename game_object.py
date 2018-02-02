@@ -1,4 +1,7 @@
 from math import sqrt
+import logging
+
+logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', level=logging.INFO)
 
 
 class Position:
@@ -19,6 +22,7 @@ class Vector(Position):
 class GameObject:
     def __init__(self, tick_number: int = 0):
         self.tick_number = tick_number
+        self.logger = logging.getLogger(self.__class__.__name__.ljust(20))
 
     def tick(self):
         pass
@@ -61,6 +65,9 @@ class Planetoid(Body):
     def get_mass(self):
         return self.mass
 
+    def tick(self):
+        self.logger.info("Planetoid Tick!")
+
 
 class Resource:
     name: str
@@ -87,6 +94,6 @@ class SpaceCraft(Body):
         self.resources = {}
 
     def tick(self):
-        pass
+        self.logger.info("Spacecraft Tick!")
 
 
