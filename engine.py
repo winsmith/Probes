@@ -4,11 +4,19 @@ from game_object import GameObject
 
 
 class ProbesEngine:
-    def __init__(self, start_time: datetime = datetime(0, 0, 0)):
-        self.game_objects = [GameObject]
-        self.current_time = start_time
+    def __init__(self, start_time: int = 0):
+        self.game_objects = []
+        self.current_tick_number = start_time
 
     def tick(self):
-        self.current_time = self.current_time + timedelta(days=1)
+        self.current_tick_number = self.current_tick_number + 1
         for game_object in self.game_objects:
             game_object.tick()
+
+    def run(self):
+        while True:
+            try:
+                self.tick()
+            except KeyboardInterrupt:
+                print("Bye")
+                return
