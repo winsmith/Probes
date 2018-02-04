@@ -1,1 +1,3 @@
-from game_object import *
+from .resources import Resource, SpacecraftResource
+from .parts import SpacecraftPart
+from .game_object import *

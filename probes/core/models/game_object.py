@@ -1,8 +1,9 @@
 from django.db import models
 from math import sqrt
 from django.conf import settings
-from django.db.models import CASCADE
 from functools import reduce
+
+from .resources import SpacecraftResource
 
 
 class GameObject(models.Model):
@@ -81,27 +82,10 @@ class Body(Movable):
         return self.mass
 
 
-class SpacecraftResource(models.Model):
-    spacecraft = models.ForeignKey('Spacecraft', on_delete=CASCADE)
-    resource = models.ForeignKey('Resource', on_delete=CASCADE)
-    amount = models.FloatField(default=0.0)
-
-
 class Spacecraft(Movable):
-    resources = models.ManyToManyField('Resource', through=)
+    resources = models.ManyToManyField('Resource', through=SpacecraftResource)
 
     def get_mass(self):
         parts_mass = reduce(lambda x, y: x + y.mass, self.parts.all(), 0)
         # TODO: Resources Mass
         return parts_mass
-
-
-class SpacecraftPart(models.Model):
-    spacecraft = models.ForeignKey(Spacecraft, related_name='parts', on_delete=CASCADE)
-    name = models.CharField(default="Unnamed Spacecraft Part")
-    mass = models.FloatField(default=100.0)
-
-
-class Resource(models.Model):
-    name = models.CharField(default="Unnamed Resource")
-    mass = models.FloatField(default=1.0)
