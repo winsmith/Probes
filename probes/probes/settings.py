@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from datetime import datetime, timedelta
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -111,7 +113,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -121,3 +123,6 @@ STATIC_URL = '/static/'
 
 # gravitational constant
 GRAVITATIONAL_CONSTANT = 6.673e-11
+
+TICK_ZERO = datetime(2018, 2, 4, 20, 0)
+TICK_TIMEDELTA = timedelta(seconds=10)
