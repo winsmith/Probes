@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'polymorphic',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -126,4 +127,4 @@ STATIC_URL = '/static/'
 GRAVITATIONAL_CONSTANT = 6.673e-11
 
 TICK_ZERO = datetime(2018, 2, 4, 20, 0)
-TICK_TIMEDELTA = timedelta(seconds=10)
+TICK_TIMEDELTA = timedelta(seconds=1)

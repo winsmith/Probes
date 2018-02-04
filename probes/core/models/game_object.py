@@ -1,4 +1,5 @@
 from django.db import models
+from polymorphic.models import PolymorphicModel
 from math import sqrt
 from django.conf import settings
 from functools import reduce
@@ -6,12 +7,15 @@ from functools import reduce
 from .resources import SpacecraftResource
 
 
-class GameObject(models.Model):
+class GameObject(PolymorphicModel):
     name = models.CharField(max_length=255, default="Unnamed GameObject")
     tick_number = models.IntegerField(default=0)
 
     def tick(self):
-        self.tick_number += self.tick_number
+        self.tick_number += 1
+
+    def __unicode__(self):
+        return self.name
 
 
 class Positionable(GameObject):
