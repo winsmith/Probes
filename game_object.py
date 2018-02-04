@@ -1,6 +1,8 @@
 from math import sqrt
 import logging
 
+from functools import reduce
+
 logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s %(message)s', level=logging.INFO)
 G = 6.673e-11  # gravitational constant
 
@@ -122,6 +124,11 @@ class CrewMember:
 
 class SpaceCraftPart:
     name: str
+    mass: float
+
+    def __init__(self, name="unnamed SpaceCraftPart", mass=20):
+        self.name = name
+        self.mass = mass
 
 
 class SpaceCraft(Body):
@@ -140,8 +147,8 @@ class SpaceCraft(Body):
         self.logger.info("Spacecraft Tick!")
 
     def get_mass(self):
-        base_mass = 100
-        component_mass = 20
-        return base_mass + component_mass * len(self.parts)
+        base_mass = 1
+        parts_mass = reduce(lambda x, y: x+y.mass, self.parts, 0)
+        return base_mass + parts_mass
 
 
