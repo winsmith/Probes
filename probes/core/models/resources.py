@@ -3,7 +3,7 @@ from django.db.models import CASCADE
 
 
 class Resource(models.Model):
-    name = models.CharField(default="Unnamed Resource")
+    name = models.CharField(max_length=255, default="Unnamed Resource")
     mass = models.FloatField(default=1.0)
 
 
